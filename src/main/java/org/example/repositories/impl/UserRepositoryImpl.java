@@ -5,9 +5,8 @@ import org.example.repositories.UserRepository;
 import org.example.utils.JpaUtil;
 
 import javax.persistence.EntityManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
 
 public class UserRepositoryImpl implements UserRepository {
 
@@ -26,6 +25,22 @@ public class UserRepositoryImpl implements UserRepository {
         User user = entityManager.find(User.class, id);
         entityManager.close();
         return user;
+    }
+
+    @Override
+    public User getUserByUsername(String username) {
+        EntityManager entityManager = JpaUtil.getEntityManager();
+
+        try {
+            String jpql = "SELECT u FROM User u WHERE u.username = :username";
+            TypedQuery<User> query = entityManager.createQuery(jpql, User.class);
+            query.setParameter("username", username);
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        } finally {
+            entityManager.close();
+        }
     }
 
     @Override

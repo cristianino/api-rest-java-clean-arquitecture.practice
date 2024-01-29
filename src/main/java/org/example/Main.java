@@ -20,6 +20,8 @@ public class Main {
 
         app.post("/login", AuthController::login);
 
+        app.post("/register", AuthController::register);
+
         app.get("/say-hello", ResourceController::getHello);
 
         app.get("/user", ctx -> ctx.json(Objects.requireNonNull(ctx.attribute("user"))));
