@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  mariadb:
+    image: mariadb
+    container_name: mariadb_container
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootPass
+      MYSQL_DATABASE: api-rest
+      MYSQL_USER: testUser
+      MYSQL_PASSWORD: testPass
+    ports:
+      - "3306:3306"
+volumes:
+  mariadb_data:
