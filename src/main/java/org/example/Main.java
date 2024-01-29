@@ -1,0 +1,22 @@
+package org.example;
+
+import io.javalin.Javalin;
+import org.example.controllers.AuthController;
+import org.example.controllers.ResourceController;
+import org.example.handlers.JWTVerifierHandler;
+
+public class Main {
+    public static void main(String[] args) {
+
+        Javalin app = Javalin.create().start(7070);
+        app.before("/say-hello", new JWTVerifierHandler());
+
+
+        app.get("/ping", ctx -> ctx.result("pong"));
+
+        app.post("/login", AuthController::login);
+
+        app.get("/say-hello", ResourceController::getHello);
+
+    }
+}
