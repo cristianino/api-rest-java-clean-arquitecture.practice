@@ -6,6 +6,7 @@ import org.example.repositories.impl.UserRepositoryImpl;
 import org.example.services.auth.RegisterUserService;
 import org.example.usecase.UserTransformer;
 import org.example.usecase.impl.RetrieveUserImpl;
+import org.example.utils.HashUtil;
 
 public class RegisterUserServiceImpl implements RegisterUserService {
     @Override
@@ -13,11 +14,13 @@ public class RegisterUserServiceImpl implements RegisterUserService {
         UserRepository userRepository = new UserRepositoryImpl();
         UserTransformer userTransformer  = new RetrieveUserImpl();
 
+        String hashedPassword = HashUtil.hashString(password);
+
         org.example.entities.User userEntity = new org.example.entities.User();
         userEntity.setUsername(user.getUsername());
         userEntity.setName(user.getName());
         userEntity.setEmail(user.getEmail());
-        userEntity.setPassword(password);
+        userEntity.setPassword(hashedPassword);
 
         userRepository.saveUser(userEntity);
 

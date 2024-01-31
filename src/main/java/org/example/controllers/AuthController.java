@@ -16,6 +16,7 @@ import org.example.utils.JWTUtil;
 public class AuthController {
 
     private static final Gson gson = new Gson();
+
     public static void login(Context ctx) {
         AuthService authService = new AuthServiceImpl();
         String requestBody = ctx.body();

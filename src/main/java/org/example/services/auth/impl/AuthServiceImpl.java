@@ -6,6 +6,7 @@ import org.example.repositories.impl.UserRepositoryImpl;
 import org.example.services.auth.AuthService;
 import org.example.usecase.UserTransformer;
 import org.example.usecase.impl.RetrieveUserImpl;
+import org.example.utils.HashUtil;
 import org.example.utils.JWTUtil;
 
 public class AuthServiceImpl implements AuthService {
@@ -18,9 +19,10 @@ public class AuthServiceImpl implements AuthService {
 
         if (userEntity == null) throw new JWTVerificationException("user no found");
 
-        //compare password hash
-        if (!userEntity.getPassword().equals(password)) throw new JWTVerificationException("invalid credentials");
+        String hashedPassword = HashUtil.hashString(password);
 
+        //compare password hash
+        if (!userEntity.getPassword().equals(hashedPassword)) throw new JWTVerificationException("invalid credentials");
 
         return JWTUtil.generateToken(
                 userTransformer.apply(userEntity)
