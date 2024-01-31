@@ -1,8 +1,12 @@
 package org.example.responses;
 
+import lombok.Builder;
+import lombok.Data;
 import org.example.models.User;
 
+@Builder
+@Data
 public class RegisterResponse {
-    public String token;
-    public User user;
+    private String token;
+    private User user;
 }

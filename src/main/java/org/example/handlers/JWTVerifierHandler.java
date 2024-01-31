@@ -16,13 +16,14 @@ public class JWTVerifierHandler implements Handler {
             String token = Objects.requireNonNull(context.header("Authorization")).substring(7);
             JWTUtil.verify(token);
 
-            User user = new User(JWTUtil.getUsernameToken());
-            user.setId(JWTUtil.getIdToken());
-            user.setEmail(JWTUtil.getEmailToken());
-            user.setName(JWTUtil.getNameToken());
-
-
-            context.attribute("user", user);
+            context.attribute("user",
+                    User.builder()
+                            .name(JWTUtil.getNameToken())
+                            .email(JWTUtil.getEmailToken())
+                            .id(JWTUtil.getIdToken())
+                            .username(JWTUtil.getUsernameToken())
+                            .build()
+            );
 
         } catch (JWTVerificationException | NullPointerException e){
             context.status(401).result("Token inválido. " + e.getMessage());

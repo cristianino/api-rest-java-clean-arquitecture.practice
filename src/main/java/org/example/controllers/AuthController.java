@@ -24,11 +24,11 @@ public class AuthController {
         String username = loginRequest.getUsername();
         String password = loginRequest.getPassword();
 
-        LoginResponse loginResponse = new LoginResponse();
-
-        loginResponse.token = authService.authUser(username, password);
-
-        ctx.json(loginResponse);
+        ctx.json(
+                LoginResponse.builder()
+                        .token(authService.authUser(username, password))
+                .build()
+        );
     }
 
     public static void register(Context ctx) {
@@ -37,17 +37,21 @@ public class AuthController {
         String requestBody = ctx.body();
         RegisterRequest registerRequest = gson.fromJson(requestBody, RegisterRequest.class);
 
-        User user = new User(registerRequest.getUsername());
-        user.setEmail(registerRequest.getEmail());
-        user.setName(registerRequest.getName());
-        String password = registerRequest.getPassword();
+        User userRegister = registerUserService.register(
+                User.builder()
+                .email(registerRequest.getEmail())
+                .name(registerRequest.getName())
+                .username(registerRequest.getUsername())
+                .build(),
+                registerRequest.getPassword()
+        );
 
-        User userRegister = registerUserService.register(user, password);
-
-        RegisterResponse registerResponse = new RegisterResponse();
-        registerResponse.user = userRegister;
-        registerResponse.token = JWTUtil.generateToken(userRegister);
-        ctx.json(registerResponse);
+        ctx.json(
+                RegisterResponse.builder()
+                .token(JWTUtil.generateToken(userRegister))
+                .user(userRegister)
+                .build()
+        );
     }
 }
 

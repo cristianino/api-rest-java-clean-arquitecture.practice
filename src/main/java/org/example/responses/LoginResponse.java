@@ -1,5 +1,10 @@
 package org.example.responses;
 
+import lombok.Builder;
+import lombok.Data;
+
+@Builder
+@Data
 public class LoginResponse {
-    public String token;
+    private String token;
 }

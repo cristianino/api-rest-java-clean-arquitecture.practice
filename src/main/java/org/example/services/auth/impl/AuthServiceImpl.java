@@ -19,11 +19,13 @@ public class AuthServiceImpl implements AuthService {
         //compare password hash
         if (!UserEntity.getPassword().equals(password)) throw new JWTVerificationException("invalid credentials");
 
-
-        User userAuthenticated = new User(UserEntity.getUsername());
-        userAuthenticated.setName(UserEntity.getName());
-        userAuthenticated.setId(UserEntity.getId());
-        userAuthenticated.setEmail(UserEntity.getEmail());
-        return JWTUtil.generateToken(userAuthenticated);
+        return JWTUtil.generateToken(
+                User.builder()
+                        .id(UserEntity.getId())
+                        .username(UserEntity.getUsername())
+                        .name(UserEntity.getName())
+                        .email(UserEntity.getEmail())
+                        .build()
+        );
     }
 }

@@ -20,10 +20,11 @@ public class RegisterUserServiceImpl implements RegisterUserService {
 
         userEntity = userRepository.getUserByUsername(userEntity.getUsername());
 
-        User userCreated = new User(userEntity.getUsername());
-        userCreated.setName(userEntity.getName());
-        userCreated.setId(userEntity.getId());
-        userCreated.setEmail(userEntity.getEmail());
-        return userCreated;
+        return User.builder()
+                .id(userEntity.getId())
+                .name(userEntity.getName())
+                .email(userEntity.getEmail())
+                .username(userEntity.getUsername())
+                .build();
     }
 }
