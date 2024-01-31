@@ -4,11 +4,14 @@ import org.example.models.User;
 import org.example.repositories.UserRepository;
 import org.example.repositories.impl.UserRepositoryImpl;
 import org.example.services.auth.RegisterUserService;
+import org.example.usecase.UserTransformer;
+import org.example.usecase.impl.RetrieveUserImpl;
 
 public class RegisterUserServiceImpl implements RegisterUserService {
     @Override
     public User register(User user, String password) {
         UserRepository userRepository = new UserRepositoryImpl();
+        UserTransformer userTransformer  = new RetrieveUserImpl();
 
         org.example.entities.User userEntity = new org.example.entities.User();
         userEntity.setUsername(user.getUsername());
@@ -20,11 +23,6 @@ public class RegisterUserServiceImpl implements RegisterUserService {
 
         userEntity = userRepository.getUserByUsername(userEntity.getUsername());
 
-        return User.builder()
-                .id(userEntity.getId())
-                .name(userEntity.getName())
-                .email(userEntity.getEmail())
-                .username(userEntity.getUsername())
-                .build();
+        return userTransformer.apply(userEntity);
     }
 }
