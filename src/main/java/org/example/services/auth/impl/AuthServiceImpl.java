@@ -10,7 +10,7 @@ import org.example.utils.HashUtil;
 import org.example.utils.JWTUtil;
 
 public class AuthServiceImpl implements AuthService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public AuthServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;

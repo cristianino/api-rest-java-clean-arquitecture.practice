@@ -1,5 +1,6 @@
 package org.example.services.auth.impl;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.example.models.User;
 import org.example.repositories.UserRepository;
 import org.example.repositories.impl.UserRepositoryImpl;
@@ -9,7 +10,7 @@ import org.example.usecase.impl.RetrieveUserImpl;
 import org.example.utils.HashUtil;
 
 public class RegisterUserServiceImpl implements RegisterUserService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public RegisterUserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -17,6 +18,13 @@ public class RegisterUserServiceImpl implements RegisterUserService {
     @Override
     public User register(User user, String password) {
         UserTransformer userTransformer  = new RetrieveUserImpl();
+
+        org.example.entities.User userExist = userRepository.getUserByUsername(user.getUsername());
+
+        if (userExist != null){
+            throw new JWTVerificationException("the username exist");
+        }
+
 
         String hashedPassword = HashUtil.hashString(password);
 
