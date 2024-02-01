@@ -10,8 +10,13 @@ import org.example.utils.HashUtil;
 import org.example.utils.JWTUtil;
 
 public class AuthServiceImpl implements AuthService {
+    private UserRepository userRepository;
+
+    public AuthServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     public String authUser(String username, String password) {
-        UserRepository userRepository = new UserRepositoryImpl();
         UserTransformer userTransformer  = new RetrieveUserImpl();
 
         //Get user

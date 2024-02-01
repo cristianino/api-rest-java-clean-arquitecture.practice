@@ -12,6 +12,8 @@ public class RetrieveUserImpl implements UserTransformer {
                 .username(user.getUsername())
                 .name(user.getName())
                 .email(user.getEmail())
+                .createdAt(user.getCreatedAt())
+                .updatedAt(user.getUpdatedAt())
                 .build();
     }
 }

@@ -22,6 +22,8 @@ public class JWTVerifierHandler implements Handler {
                             .email(JWTUtil.getEmailToken())
                             .id(JWTUtil.getIdToken())
                             .username(JWTUtil.getUsernameToken())
+                            .updatedAt(JWTUtil.getUpdateAtToken())
+                            .createdAt(JWTUtil.getCreatedAtToken())
                             .build()
             );
 

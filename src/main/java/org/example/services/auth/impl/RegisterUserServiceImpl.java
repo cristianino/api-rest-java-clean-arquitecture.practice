@@ -9,9 +9,13 @@ import org.example.usecase.impl.RetrieveUserImpl;
 import org.example.utils.HashUtil;
 
 public class RegisterUserServiceImpl implements RegisterUserService {
+    private UserRepository userRepository;
+
+    public RegisterUserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
     @Override
     public User register(User user, String password) {
-        UserRepository userRepository = new UserRepositoryImpl();
         UserTransformer userTransformer  = new RetrieveUserImpl();
 
         String hashedPassword = HashUtil.hashString(password);

@@ -6,7 +6,9 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.example.models.User;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.UUID;
 
 public class JWTUtil {
     private static final String SECRET = "ccf0f2fd0f5f7268dfcaa01213e7664fbe1b453a24073fcc1e8a99757e68c1b9";
@@ -19,9 +21,29 @@ public class JWTUtil {
                 .withClaim("username", user.getUsername())
                 .withClaim("name", user.getName())
                 .withClaim("email", user.getEmail())
-                .withClaim("id", user.getId())
+                .withClaim("update_at", user.getUpdatedAt())
+                .withClaim("create_at", user.getCreatedAt())
+                .withClaim("id", user.getId().toString())
                 .withExpiresAt(expirationDate)
                 .sign(algorithm);
+    }
+
+    public static Date getCreatedAtToken(String token) {
+        DecodedJWT jwt = JWT.decode(token);
+        return jwt.getClaim("create_at").asDate();
+    }
+
+    public static Date getCreatedAtToken() {
+        return jwt.getClaim("create_at").asDate();
+    }
+
+    public static Date getUpdateAtToken(String token) {
+        DecodedJWT jwt = JWT.decode(token);
+        return jwt.getClaim("update_at").asDate();
+    }
+
+    public static Date getUpdateAtToken() {
+        return jwt.getClaim("update_at").asDate();
     }
 
     public static String getNameToken(String token) {
@@ -43,13 +65,13 @@ public class JWTUtil {
     }
 
 
-    public static int getIdToken(String token) {
+    public static UUID getIdToken(String token) {
         DecodedJWT jwt = JWT.decode(token);
-        return jwt.getClaim("id").asInt();
+        return UUID.fromString(jwt.getClaim("id").asString());
     }
 
-    public static int getIdToken() {
-        return jwt.getClaim("id").asInt();
+    public static UUID getIdToken() {
+        return UUID.fromString(jwt.getClaim("id").asString());
     }
 
     public static String getUsernameToken(String token) {

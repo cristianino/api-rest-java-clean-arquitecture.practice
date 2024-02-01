@@ -3,6 +3,8 @@ package org.example.controllers;
 import com.google.gson.Gson;
 import io.javalin.http.Context;
 import org.example.models.User;
+import org.example.repositories.UserRepository;
+import org.example.repositories.impl.UserRepositoryImpl;
 import org.example.requests.LoginRequest;
 import org.example.requests.RegisterRequest;
 import org.example.responses.LoginResponse;
@@ -17,42 +19,53 @@ public class AuthController {
 
     private static final Gson gson = new Gson();
 
+    private static final UserRepository userRepository = new UserRepositoryImpl();
+
     public static void login(Context ctx) {
-        AuthService authService = new AuthServiceImpl();
-        String requestBody = ctx.body();
-        LoginRequest loginRequest = gson.fromJson(requestBody, LoginRequest.class);
+        try {
 
-        String username = loginRequest.getUsername();
-        String password = loginRequest.getPassword();
+            AuthService authService = new AuthServiceImpl(userRepository);
+            String requestBody = ctx.body();
+            LoginRequest loginRequest = gson.fromJson(requestBody, LoginRequest.class);
 
-        ctx.json(
-                LoginResponse.builder()
-                        .token(authService.authUser(username, password))
-                .build()
-        );
+            String username = loginRequest.getUsername();
+            String password = loginRequest.getPassword();
+
+            ctx.json(
+                    LoginResponse.builder()
+                            .token(authService.authUser(username, password))
+                            .build()
+            );
+        } catch (Exception e) {
+            ctx.result(e.getMessage());
+        }
     }
 
     public static void register(Context ctx) {
 
-        RegisterUserService registerUserService = new RegisterUserServiceImpl();
-        String requestBody = ctx.body();
-        RegisterRequest registerRequest = gson.fromJson(requestBody, RegisterRequest.class);
+        try {
+            RegisterUserService registerUserService = new RegisterUserServiceImpl(userRepository);
+            String requestBody = ctx.body();
+            RegisterRequest registerRequest = gson.fromJson(requestBody, RegisterRequest.class);
 
-        User userRegister = registerUserService.register(
-                User.builder()
-                .email(registerRequest.getEmail())
-                .name(registerRequest.getName())
-                .username(registerRequest.getUsername())
-                .build(),
-                registerRequest.getPassword()
-        );
+            User userRegister = registerUserService.register(
+                    User.builder()
+                            .email(registerRequest.getEmail())
+                            .name(registerRequest.getName())
+                            .username(registerRequest.getUsername())
+                            .build(),
+                    registerRequest.getPassword()
+            );
 
-        ctx.json(
-                RegisterResponse.builder()
-                .token(JWTUtil.generateToken(userRegister))
-                .user(userRegister)
-                .build()
-        );
+            ctx.json(
+                    RegisterResponse.builder()
+                            .token(JWTUtil.generateToken(userRegister))
+                            .user(userRegister)
+                            .build()
+            );
+        } catch (Exception e) {
+            ctx.result(e.getMessage());
+        }
     }
 }
 
