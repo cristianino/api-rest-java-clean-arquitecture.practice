@@ -4,9 +4,18 @@ import lombok.Builder;
 import lombok.Data;
 import org.example.models.User;
 
+
 @Builder
 @Data
 public class RegisterResponse {
-    private String token;
-    private User user;
+    public static final String STATUS = "ok";
+    private DataPayload data;
+    private String status = STATUS;
+    @Builder
+    @Data
+    public static class DataPayload {
+        private String token;
+        private User user;
+    }
 }
+

@@ -18,8 +18,6 @@ import org.example.services.auth.impl.AuthServiceImpl;
 import org.example.services.auth.impl.RegisterUserServiceImpl;
 import org.example.utils.JWTUtil;
 
-import java.util.List;
-
 public class AuthController {
 
     private static final Gson gson = new Gson();
@@ -67,8 +65,13 @@ public class AuthController {
 
             ctx.json(
                     RegisterResponse.builder()
-                            .token(JWTUtil.generateToken(userRegister))
-                            .user(userRegister)
+                            .data(
+                                RegisterResponse.DataPayload.builder()
+                                    .token(JWTUtil.generateToken(userRegister))
+                                    .user(userRegister)
+                                    .build()
+                            )
+                            .status(RegisterResponse.STATUS)
                             .build()
             );
         } catch (JWTVerificationException | RegisterUserException e) {
