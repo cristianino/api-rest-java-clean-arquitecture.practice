@@ -1,9 +1,8 @@
 package org.example.services.auth.impl;
 
-import com.auth0.jwt.exceptions.JWTVerificationException;
+import org.example.exceptions.RegisterUserException;
 import org.example.models.User;
 import org.example.repositories.UserRepository;
-import org.example.repositories.impl.UserRepositoryImpl;
 import org.example.services.auth.RegisterUserService;
 import org.example.usecase.UserTransformer;
 import org.example.usecase.impl.RetrieveUserImpl;
@@ -22,7 +21,7 @@ public class RegisterUserServiceImpl implements RegisterUserService {
         org.example.entities.User userExist = userRepository.getUserByUsername(user.getUsername());
 
         if (userExist != null){
-            throw new JWTVerificationException("the username exist");
+            throw new RegisterUserException("the username exist");
         }
 
 

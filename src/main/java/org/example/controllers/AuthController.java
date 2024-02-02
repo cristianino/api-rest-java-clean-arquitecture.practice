@@ -1,12 +1,15 @@
 package org.example.controllers;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.google.gson.Gson;
 import io.javalin.http.Context;
+import org.example.exceptions.RegisterUserException;
 import org.example.models.User;
 import org.example.repositories.UserRepository;
 import org.example.repositories.impl.UserRepositoryImpl;
 import org.example.requests.LoginRequest;
 import org.example.requests.RegisterRequest;
+import org.example.responses.FallbackResponse;
 import org.example.responses.LoginResponse;
 import org.example.responses.RegisterResponse;
 import org.example.services.auth.AuthService;
@@ -14,6 +17,8 @@ import org.example.services.auth.RegisterUserService;
 import org.example.services.auth.impl.AuthServiceImpl;
 import org.example.services.auth.impl.RegisterUserServiceImpl;
 import org.example.utils.JWTUtil;
+
+import java.util.List;
 
 public class AuthController {
 
@@ -63,8 +68,19 @@ public class AuthController {
                             .user(userRegister)
                             .build()
             );
-        } catch (Exception e) {
-            ctx.result(e.getMessage());
+        } catch (JWTVerificationException | RegisterUserException e) {
+            ctx.status(400).json(FallbackResponse.builder()
+                            .message(e.getMessage())
+                            .status("Fallback")
+                    .build());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            // Return a custom error response
+            ctx.status(500).json(FallbackResponse.builder()
+                    .message("Internal Server Error: " + e.getMessage())
+                    .status("Fallback")
+                    .build());
         }
     }
 }
