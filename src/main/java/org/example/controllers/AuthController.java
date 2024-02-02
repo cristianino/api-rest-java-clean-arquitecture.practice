@@ -49,9 +49,12 @@ public class AuthController {
     public static void register(Context ctx) {
 
         try {
-            RegisterUserService registerUserService = new RegisterUserServiceImpl(userRepository);
             String requestBody = ctx.body();
+
             RegisterRequest registerRequest = gson.fromJson(requestBody, RegisterRequest.class);
+            registerRequest.validate(userRepository);
+
+            RegisterUserService registerUserService = new RegisterUserServiceImpl(userRepository);
 
             User userRegister = registerUserService.register(
                     User.builder()

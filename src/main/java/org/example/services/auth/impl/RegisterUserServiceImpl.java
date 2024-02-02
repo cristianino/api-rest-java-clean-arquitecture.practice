@@ -1,6 +1,5 @@
 package org.example.services.auth.impl;
 
-import org.example.exceptions.RegisterUserException;
 import org.example.models.User;
 import org.example.repositories.UserRepository;
 import org.example.services.auth.RegisterUserService;
@@ -17,13 +16,6 @@ public class RegisterUserServiceImpl implements RegisterUserService {
     @Override
     public User register(User user, String password) {
         UserTransformer userTransformer  = new RetrieveUserImpl();
-
-        org.example.entities.User userExist = userRepository.getUserByUsername(user.getUsername());
-
-        if (userExist != null){
-            throw new RegisterUserException("the username exist");
-        }
-
 
         String hashedPassword = HashUtil.hashString(password);
 
